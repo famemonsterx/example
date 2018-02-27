@@ -24,13 +24,19 @@
           :type="e1 ? 'password' : 'text'"
           counter
         ></v-text-field>
+        <v-btn
+      @click="submit"
+      :disabled="!valid">
+      submit
+    </v-btn>
+    <v-btn @click="clear">clear</v-btn>
   </v-form>
 </template>
 
 <script>
   export default {
     data: () => ({
-      valid: false,
+      valid: true,
       e1: false,
       password: '',
       name: '',
@@ -43,6 +49,21 @@
         v => !!v || 'E-mail is required',
         v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
       ]
-    })
+    }),
+      methods: {
+      submit () {
+        if (this.$refs.form.validate()) {
+          // Native form submission is not yet supported
+          axios.post('/api/submit', {
+            name: this.name,
+            email: this.email,
+            password: this.password
+          })
+        }
+      },
+      clear () {
+        this.$refs.form.reset()
+      }
+    }
   }
 </script>

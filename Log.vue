@@ -16,6 +16,11 @@
           v-on:type="counter ? 'password' : 'text'"
           counter
         ></v-text-field>
+        <v-btn
+      @click="submit"
+      :disabled="!valid">
+      submit
+    </v-btn>
           </v-form>
 </template>
 
@@ -32,6 +37,17 @@
         v => v.length <= 10 || 'Name must be less than 10 characters'
       ]
     }),
+    methods: {
+      submit () {
+        if (this.$refs.form.validate()) {
+          // Native form submission is not yet supported
+          axios.post('/api/submit', {
+            name: this.name,
+            email: this.email,
+            password: this.password
+          })
+        }
+      }},
     data: function () {
     return {
       counter: this.switch1
